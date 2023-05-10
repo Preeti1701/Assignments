@@ -1,0 +1,57 @@
+Q1. Can you think of a few applications for a sequence-to-sequence RNN? What about a sequence-to-vector RNN? And a vector-to-sequence RNN?
+
+Ans:
+
+In Sequence to Sequence Learning, RNN is trained to map an input sequence to an output sequence which is not necessarily of the same length.
+
+Applications are speech recognition, machine translation, image captioning and question answering.
+
+A variable-length context vector can be used instead of a ﬁxed-size vector. An Attention mechanism can be used to produces a sequence of vectors from the encoder RNN from each time step of the input sequence. The Decoder learns to pay selective attention to the vectors to produce the output at each time step.
+
+Q2. Why do people use encoder–decoder RNNs rather than plain sequence-to-sequence RNNs for automatic translation?
+
+Ans:
+
+This two-step model, called an Encoder–Decoder, works much better than trying to translate on the fly with a single sequence-to-sequence RNN (like the one represented on the top left), since the last words of a sentence can affect the first words of the translation, so you need to wait until you have heard the whole sentence before translating it. Seq-2-seq RNNs translate one word at a time where as encoder-decoder RNNs read & translate a sentence at a time
+
+0_V0GyOt3LoDVfY7y5.png
+
+Q3. How could you combine a convolutional neural network with an RNN to classify videos?
+
+Ans:
+
+We can combine CNN and RNN.
+
+Each video is converted into sequential images and passed onto the CNN to extract spatial features. The outputs are then passed into a recurrent sequence learning model (i.e. LSTM) to identify temporal features within the image sequence.
+
+0_V0GyOt3LoDVfY7y5.png
+
+Q4. What are the advantages of building an RNN using dynamic_rnn() rather than static_rnn()?
+
+Ans:
+
+Below are the advantages of building an RNN using dynamic_rnn() rather than static_rnn():
+
+Avoids out-of-memory errors
+
+Directly takes single tensor as input and output (covering all time steps)
+
+No need to stack, unstack, or transpose
+
+Generates a smaller easier to visualize graph in TensorBoard
+
+Q5. How can you deal with variable-length input sequences? What about variable-length output sequences?
+
+Ans:
+
+We can deal with varibale-length input sequences in the following ways:
+
+Set sequence_length parameter when calling static_rnn() or dynamic_rnn()
+
+Pad smaller input/output to make them same size as largest input/output
+
+Q6. What is a common way to distribute training and execution of a deep RNN across multiple GPUs? Ans:
+
+A Common way to distribute training and execution of a deep RNN across multiple GPUs is to place each layer on a different GPU.
+
+0_V0GyOt3LoDVfY7y5.png

@@ -1,0 +1,368 @@
+Assignment 6 Solution
+1. What are the advantages of a CNN over a fully connected DNN for image classification?
+
+Ans: Convolutional Neural Networks (CNNs) have several advantages over fully connected Deep Neural Networks (DNNs) for image classification. Here are some of the main advantages:
+
+Parameter efficiency: CNNs use shared weights and biases for the convolutional layers, which greatly reduces the number of parameters compared to fully connected DNNs. This makes CNNs more efficient for processing large images and reduces the risk of overfitting.
+
+Translation invariance: CNNs are designed to recognize patterns and features within an image regardless of their location, making them translation invariant. This is achieved through the use of convolutional layers that slide filters over the image to detect patterns in a local area. This property makes CNNs well-suited for image classification tasks where the object of interest can be anywhere in the image.
+
+Hierarchical feature learning: CNNs use multiple layers of feature extraction to learn hierarchical representations of images. This allows the network to learn high-level concepts, such as object categories, from low-level features, such as edges and corners. In contrast, fully connected DNNs treat all input features as independent and do not capture the spatial relationships between them.
+
+Robustness to input variations: CNNs are designed to be robust to variations in the input, such as changes in lighting, rotation, and scale. This is achieved through the use of techniques such as pooling, which reduces the sensitivity of the network to small changes in the input.
+
+Overall, the advantages of CNNs over fully connected DNNs make them the state-of-the-art approach for image classification tasks.
+
+2. Consider a CNN composed of three convolutional layers, each with 3 × 3 kernels, a stride of 2, and "same" padding. The lowest layer outputs 100 feature maps, the middle one outputs 200, and the top one outputs 400. The input images are RGB images of 200 × 300 pixels. What is the total number of parameters in the CNN? If we are using 32-bit floats, at least how much RAM will this network require when making a prediction for a single instance? What about when training on a mini-batch of 50 images?
+
+Ans: To calculate the total number of parameters in the CNN, we need to count the number of parameters in each layer and then sum them up. The number of parameters in a convolutional layer depends on the number of filters, the size of the filters, and the number of input channels. The formula for calculating the number of parameters in a convolutional layer is:
+
+number of parameters = (size of filter * number of input channels + 1) * number of filters
+
+Using the given information, we can calculate the number of parameters in each convolutional layer:
+
+The first convolutional layer has 3x3x3x100 + 100 = 2,800 parameters
+The second convolutional layer has 3x3x100x200 + 200 = 180,200 parameters
+The third convolutional layer has 3x3x200x400 + 400 = 1,160,400 parameters
+Therefore, the total number of parameters in the CNN is 2,800 + 180,200 + 1,160,400 = 1,343,400 parameters.
+
+To calculate the amount of RAM required for prediction or training, we need to consider the size of the input and output tensors and the data type being used. Assuming we are using 32-bit floats (4 bytes), the size of the input tensor for a single image is 200x300x3 = 180,000 bytes. The size of the output tensor for a single image is (200/8)x(300/8)x400x4 = 6,000,000 bytes. Therefore, the total RAM required for prediction for a single instance is approximately 6,180,000 bytes (6.18 MB).
+
+If we are training on a mini-batch of 50 images, the total RAM required would be 50 times the RAM required for a single instance, which is approximately 309 MB. However, this is just the memory required for storing the input and output tensors during one forward pass of the network. The actual amount of memory required for training will depend on the batch size, the size of the model, the optimizer being used, and other factors.
+
+3. If your GPU runs out of memory while training a CNN, what are five things you could try to solve the problem?
+
+Ans: If your GPU runs out of memory while training a CNN, here are five things you could try to solve the problem:
+
+Decrease batch size: One of the most effective ways to reduce memory usage is to decrease the batch size. This will reduce the number of samples being processed simultaneously, which in turn reduces the amount of memory required.
+
+Reduce input size: If the input images are very large, downsampling them to a smaller size can also reduce the memory requirements. However, this may come at the cost of reduced performance or accuracy.
+
+Use mixed precision training: Using mixed precision training, where the weights and activations are stored using 16-bit floating point numbers instead of 32-bit, can significantly reduce memory usage without sacrificing accuracy.
+
+Reduce model complexity: Another way to reduce memory usage is to reduce the complexity of the model. This can be done by reducing the number of layers, filters, or neurons in the network, or by using a smaller kernel size.
+
+Use gradient checkpointing: Gradient checkpointing is a technique that trades off computation time for memory usage. Instead of storing all the intermediate activations during the forward pass for use during the backward pass, only a subset of the activations are stored. This reduces memory usage, but increases computation time during the backward pass.
+
+These are just some of the techniques that can be used to reduce memory usage during CNN training. The best approach will depend on the specific model, dataset, and hardware being used, and may require experimentation to find the optimal solution.
+
+4. Why would you want to add a max pooling layer rather than a convolutional layer with the same stride?
+
+Ans: Max pooling layers and convolutional layers with the same stride both reduce the spatial resolution of the feature maps. However, there are some reasons why one might want to use max pooling instead of convolution:
+
+Non-linearity: Max pooling introduces a non-linear activation function that can help the network learn more complex features. In contrast, a convolutional layer with the same stride only applies a linear transformation to the input.
+
+Translation invariance: Max pooling is more translation invariant than convolution with stride. This means that the features learned by the network are less sensitive to small shifts in the input image, which can improve the robustness of the network to small variations in the data.
+
+Computational efficiency: Max pooling is computationally more efficient than convolution with the same stride because it does not require any learnable parameters.
+
+Reduce overfitting: Max pooling can be used to reduce overfitting by reducing the spatial resolution of the feature maps and introducing some degree of spatial invariance.
+
+Overall, max pooling can be a useful tool for reducing the spatial resolution of feature maps while introducing non-linearity, translation invariance, and computational efficiency. However, the choice between max pooling and convolution with the same stride will depend on the specific requirements of the model and the data.
+
+5. When would you want to add a local response normalization layer?
+
+Ans: A local response normalization (LRN) layer can be added to a CNN to improve its generalization performance by promoting competition among feature maps. The main purpose of LRN is to normalize the response of a neuron by dividing it by the sum of squares of its neighboring activations.
+
+Here are some scenarios when one may want to add a local response normalization layer to a CNN:
+
+Large-scale datasets: LRN is more effective on large-scale datasets as it helps the network generalize better and reduce overfitting. When working with large-scale datasets, adding an LRN layer can improve the performance of the network.
+
+Convolutional layers with large receptive fields: When the receptive field of a convolutional layer is large, there is a high chance that some feature maps will respond strongly to stimuli that are irrelevant to the target object. In such cases, LRN can help the network suppress the irrelevant feature maps and promote the relevant ones.
+
+Networks with multiple convolutional layers: When working with CNNs with multiple convolutional layers, adding an LRN layer can help the network learn more robust features by encouraging competition among feature maps. This can help prevent the network from overfitting to the training data.
+
+Image classification tasks: LRN has been shown to be particularly effective in improving the performance of CNNs on image classification tasks. It can help the network learn more discriminative features, which in turn can improve its classification accuracy.
+
+Overall, adding a local response normalization layer to a CNN can be useful in scenarios where there is a need to improve the generalization performance of the network or promote competition among feature maps. However, the decision to add an LRN layer will depend on the specific requirements of the model and the data.
+
+6. Can you name the main innovations in AlexNet, compared to LeNet-5? What about the main innovations in GoogLeNet, ResNet, SENet, and Xception?
+
+Ans: here are the main innovations in each of the listed models:
+
+AlexNet:
+
+AlexNet was one of the first successful deep convolutional neural networks for image classification.
+It had 5 convolutional layers and 3 fully connected layers.
+AlexNet used Rectified Linear Units (ReLU) activation function instead of the traditional sigmoid activation function used in LeNet-5.
+It also used data augmentation techniques such as cropping and flipping to reduce overfitting and increase the size of the training dataset.
+AlexNet used dropout regularization to further reduce overfitting.
+AlexNet was trained on two GPUs simultaneously, which reduced the training time significantly.
+GoogLeNet:
+
+GoogLeNet introduced the concept of Inception modules, which allowed for the efficient use of multiple filter sizes in a single layer.
+It had 22 layers and was the first network to exceed human-level performance on the ImageNet classification task.
+GoogLeNet also used global average pooling instead of fully connected layers, which significantly reduced the number of parameters in the network.
+It used a 1x1 convolutional layer to reduce the dimensionality of the feature maps before applying more computationally expensive convolutional layers.
+ResNet:
+
+ResNet introduced the concept of residual blocks, which allowed for the training of very deep networks without suffering from the problem of vanishing gradients.
+It had up to 152 layers and achieved state-of-the-art performance on several computer vision tasks.
+ResNet used skip connections to connect earlier layers directly to later layers, which helped to propagate gradients more effectively during training.
+It also used batch normalization to accelerate training and improve generalization.
+SENet:
+
+SENet introduced the concept of Squeeze-and-Excitation (SE) blocks, which allowed the network to adaptively recalibrate the importance of each feature map based on the global context of the image.
+It achieved state-of-the-art performance on several computer vision tasks.
+SENet used a global average pooling layer to reduce the dimensionality of the feature maps before applying the SE blocks.
+It also used residual connections to help propagate gradients more effectively during training.
+Xception:
+
+Xception introduced the concept of depthwise separable convolutions, which separate the spatial filtering and channel-wise filtering operations.
+It had fewer parameters and was more computationally efficient than other state-of-the-art models while achieving comparable or better performance.
+Xception used residual connections and batch normalization to accelerate training and improve generalization.
+It also used global average pooling instead of fully connected layers to reduce the number of parameters in the network.
+These are just a few of the innovations introduced in each of these models. There have been many other contributions to the field of deep learning for computer vision, each building upon the successes of the previous models.
+
+7. What is a fully convolutional network? How can you convert a dense layer into a convolutional layer?
+
+Ans: A fully convolutional network (FCN) is a neural network architecture that consists entirely of convolutional layers, and no fully connected layers. FCNs are commonly used in image segmentation tasks, where the output is a pixel-wise classification map instead of a single label.
+
+To convert a dense layer into a convolutional layer, we need to ensure that the output shape of the convolutional layer is the same as the output shape of the dense layer. We can achieve this by reshaping the weights of the dense layer into the shape of a convolutional kernel.
+
+For example, suppose we have a dense layer with 512 units that takes as input a feature map of size 7x7x256, and we want to convert it into a convolutional layer with a 3x3 kernel. We can do this as follows:
+
+Reshape the weight matrix of the dense layer to have shape (3, 3, 256, 512). This will create a 3x3 convolutional kernel with 256 input channels and 512 output channels.
+
+Reshape the output of the previous convolutional layer to have shape (batch_size, 7, 7, 256). This is the same shape as the input to the dense layer.
+
+Apply the convolution operation with the reshaped kernel to the output of the previous convolutional layer. The output of this operation will have shape (batch_size, 5, 5, 512), which is the same as the output of the dense layer.
+
+By converting a dense layer into a convolutional layer in this way, we can include it in a fully convolutional network and take advantage of the benefits of convolutional layers, such as weight sharing and translation invariance.
+
+8. What is the main technical difficulty of semantic segmentation?
+
+Ans: The main technical difficulty of semantic segmentation is to accurately classify each pixel in an image into one of the pre-defined classes (e.g. person, car, tree, sky, etc.). This is a challenging task because it requires the network to learn both the spatial information and the semantic information of the image.
+
+Spatial information refers to the location and arrangement of objects in the image, which is important for distinguishing between adjacent objects or objects that overlap. Semantic information refers to the high-level concepts and meaning of the objects in the image, which is important for distinguishing between objects of the same type (e.g. different types of trees).
+
+Another difficulty is handling the class imbalance problem, where some classes have much fewer pixels than others. This can lead to a bias towards the majority classes and poor performance on minority classes.
+
+To overcome these difficulties, various techniques have been proposed, including the use of encoder-decoder architectures, skip connections, multi-scale features, dilated convolutions, and data augmentation.
+
+9. Build your own CNN from scratch and try to achieve the highest possible accuracy on MNIST.
+
+Ans:
+
+import tensorflow as tf
+from tensorflow.keras import layers
+# Load the MNIST dataset
+(x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
+# Normalize the pixel values to the range [0, 1]
+x_train = x_train.astype("float32") / 255.0
+x_test = x_test.astype("float32") / 255.0
+# Add a channel dimension to the images
+x_train = x_train[..., tf.newaxis]
+x_test = x_test[..., tf.newaxis]
+# Define the model architecture
+model = tf.keras.Sequential([
+    layers.Conv2D(32, 3, activation='relu', input_shape=(28, 28, 1)),
+    layers.MaxPooling2D(),
+    layers.Conv2D(64, 3, activation='relu'),
+    layers.MaxPooling2D(),
+    layers.Flatten(),
+    layers.Dense(128, activation='relu'),
+    layers.Dropout(0.5),
+    layers.Dense(10)
+])
+# Compile the model
+model.compile(optimizer='adam',
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              metrics=['accuracy'])
+# Train the model
+history = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test))
+Epoch 1/10
+1875/1875 [==============================] - 15s 6ms/step - loss: 0.1990 - accuracy: 0.9397 - val_loss: 0.0435 - val_accuracy: 0.9851
+Epoch 2/10
+1875/1875 [==============================] - 16s 9ms/step - loss: 0.0733 - accuracy: 0.9786 - val_loss: 0.0304 - val_accuracy: 0.9891
+Epoch 3/10
+1875/1875 [==============================] - 11s 6ms/step - loss: 0.0525 - accuracy: 0.9844 - val_loss: 0.0301 - val_accuracy: 0.9910
+Epoch 4/10
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0433 - accuracy: 0.9865 - val_loss: 0.0277 - val_accuracy: 0.9905
+Epoch 5/10
+1875/1875 [==============================] - 9s 5ms/step - loss: 0.0368 - accuracy: 0.9888 - val_loss: 0.0213 - val_accuracy: 0.9938
+Epoch 6/10
+1875/1875 [==============================] - 9s 5ms/step - loss: 0.0301 - accuracy: 0.9910 - val_loss: 0.0226 - val_accuracy: 0.9930
+Epoch 7/10
+1875/1875 [==============================] - 8s 4ms/step - loss: 0.0266 - accuracy: 0.9916 - val_loss: 0.0243 - val_accuracy: 0.9924
+Epoch 8/10
+1875/1875 [==============================] - 9s 5ms/step - loss: 0.0238 - accuracy: 0.9924 - val_loss: 0.0218 - val_accuracy: 0.9929
+Epoch 9/10
+1875/1875 [==============================] - 9s 5ms/step - loss: 0.0206 - accuracy: 0.9934 - val_loss: 0.0360 - val_accuracy: 0.9904
+Epoch 10/10
+1875/1875 [==============================] - 9s 5ms/step - loss: 0.0172 - accuracy: 0.9944 - val_loss: 0.0272 - val_accuracy: 0.9925
+# Evaluate the model on the test set
+test_loss, test_acc = model.evaluate(x_test,  y_test, verbose=2)
+print('\nTest accuracy:', test_acc)
+313/313 - 1s - loss: 0.0272 - accuracy: 0.9925 - 690ms/epoch - 2ms/step
+
+Test accuracy: 0.9925000071525574
+10. Use transfer learning for large image classification, going through these steps:
+
+a. Create a training set containing at least 100 images per class. For example, you could classify your own pictures based on the location (beach, mountain, city, etc.), or alternatively you can use an existing dataset (e.g., from TensorFlow Datasets).
+
+b. Split it into a training set, a validation set, and a test set.
+
+c. Build the input pipeline, including the appropriate preprocessing operations, and optionally add data augmentation.
+
+d. Fine-tune a pretrained model on this dataset.
+
+Ans: a. Create a training set containing at least 100 images per class. For example, you could classify your own pictures based on the location (beach, mountain, city, etc.), or alternatively you can use an existing dataset (e.g., from TensorFlow Datasets).
+
+import tensorflow_datasets as tfds
+(train_ds, val_ds, test_ds), info = tfds.load('cats_vs_dogs',
+                                             split=['train[:80%]', 'train[80%:90%]', 'train[90%:]'],
+                                             with_info=True,
+                                             as_supervised=True)
+IMG_SIZE = 224
+BATCH_SIZE = 32
+
+def preprocess_image(image, label):
+    image = tf.image.resize(image, (IMG_SIZE, IMG_SIZE))
+    image = tf.cast(image, tf.float32) / 255.0
+    image = tf.image.random_flip_left_right(image)
+    image = tf.image.random_crop(image, size=(IMG_SIZE, IMG_SIZE, 3))
+    return image, label
+
+train_ds = train_ds.map(preprocess_image).shuffle(1000).batch(BATCH_SIZE)
+val_ds = val_ds.map(preprocess_image).batch(BATCH_SIZE)
+test_ds = test_ds.map(preprocess_image).batch(BATCH_SIZE)
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+from tensorflow.keras.models import Model
+from tensorflow.keras.applications.inception_v3 import InceptionV3
+base_model = InceptionV3(include_top=False, weights='imagenet', input_shape=(IMG_SIZE, IMG_SIZE, 3))
+
+for layer in base_model.layers:
+    layer.trainable = False
+
+x = GlobalAveragePooling2D()(base_model.output)
+x = Dense(2, activation='softmax')(x)
+
+model = Model(inputs=base_model.input, outputs=x)
+
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+history = model.fit(train_ds, epochs=5, validation_data=val_ds)
+Epoch 1/5
+582/582 [==============================] - 67s 102ms/step - loss: 0.0500 - accuracy: 0.9823 - val_loss: 0.0392 - val_accuracy: 0.9884
+Epoch 2/5
+582/582 [==============================] - 53s 89ms/step - loss: 0.0365 - accuracy: 0.9873 - val_loss: 0.0469 - val_accuracy: 0.9837
+Epoch 3/5
+582/582 [==============================] - 58s 97ms/step - loss: 0.0318 - accuracy: 0.9896 - val_loss: 0.0324 - val_accuracy: 0.9901
+Epoch 4/5
+582/582 [==============================] - 54s 90ms/step - loss: 0.0264 - accuracy: 0.9917 - val_loss: 0.0386 - val_accuracy: 0.9875
+Epoch 5/5
+582/582 [==============================] - 58s 97ms/step - loss: 0.0244 - accuracy: 0.9922 - val_loss: 0.0419 - val_accuracy: 0.9880
+test_loss, test_acc = model.evaluate(test_ds)
+print('Test accuracy:', test_acc)
+73/73 [==============================] - 6s 76ms/step - loss: 0.0284 - accuracy: 0.9927
+Test accuracy: 0.9926913380622864
+b. Split it into a training set, a validation set, and a test set.
+
+(train_ds, val_ds, test_ds), info = tfds.load('cats_vs_dogs',
+                                             split=['train[:80%]', 'train[80%:90%]', 'train[90%:]'],
+                                             with_info=True,
+                                             as_supervised=True)
+c. Build the input pipeline, including the appropriate preprocessing operations, and optionally add data augmentation.
+
+import tensorflow as tf
+import tensorflow_datasets as tfds
+# Load the dataset
+(train_ds, val_ds, test_ds), info = tfds.load('cats_vs_dogs',
+                                             split=['train[:80%]', 'train[80%:90%]', 'train[90%:]'],
+                                             with_info=True,
+                                             as_supervised=True)
+# Define preprocessing functions
+IMG_SIZE = 224
+NUM_CLASSES = 2
+
+def preprocess_image(image, label):
+    # Resize the image to the input size of the model
+    image = tf.image.resize(image, (IMG_SIZE, IMG_SIZE))
+    # Convert the pixel values to the range [0, 1]
+    image = tf.cast(image, tf.float32) / 255.0
+    return image, label
+
+def augment_image(image, label):
+    # Randomly flip the image horizontally
+    image = tf.image.random_flip_left_right(image)
+    # Randomly adjust the brightness of the image
+    image = tf.image.random_brightness(image, max_delta=0.1)
+    return image, label
+# Create the training dataset
+train_ds = train_ds.shuffle(10000)
+train_ds = train_ds.map(preprocess_image, num_parallel_calls=tf.data.AUTOTUNE)
+train_ds = train_ds.map(augment_image, num_parallel_calls=tf.data.AUTOTUNE)
+train_ds = train_ds.batch(batch_size=32)
+train_ds = train_ds.prefetch(tf.data.AUTOTUNE)
+# Create the validation dataset
+val_ds = val_ds.map(preprocess_image, num_parallel_calls=tf.data.AUTOTUNE)
+val_ds = val_ds.batch(batch_size=32)
+val_ds = val_ds.prefetch(tf.data.AUTOTUNE)
+# Create the test dataset
+test_ds = test_ds.map(preprocess_image, num_parallel_calls=tf.data.AUTOTUNE)
+test_ds = test_ds.batch(batch_size=32)
+test_ds = test_ds.prefetch(tf.data.AUTOTUNE)
+d. Fine-tune a pretrained model on this dataset.
+
+import tensorflow as tf
+import tensorflow_datasets as tfds
+from tensorflow.keras.applications import MobileNetV2
+# Load the dataset
+(train_ds, val_ds, test_ds), info = tfds.load('cats_vs_dogs',
+                                             split=['train[:80%]', 'train[80%:90%]', 'train[90%:]'],
+                                             with_info=True,
+                                             as_supervised=True)
+# Define preprocessing functions
+IMG_SIZE = 224
+NUM_CLASSES = 2
+
+def preprocess_image(image, label):
+    # Resize the image to the input size of the model
+    image = tf.image.resize(image, (IMG_SIZE, IMG_SIZE))
+    # Convert the pixel values to the range [-1, 1]
+    image = tf.cast(image, tf.float32) / 127.5 - 1.0
+    return image, label
+# Apply preprocessing to the datasets
+train_ds = train_ds.map(preprocess_image).shuffle(1000).batch(32).prefetch(tf.data.AUTOTUNE)
+val_ds = val_ds.map(preprocess_image).batch(32).prefetch(tf.data.AUTOTUNE)
+test_ds = test_ds.map(preprocess_image).batch(32)
+# Load the pre-trained MobileNetV2 model
+base_model = MobileNetV2(input_shape=(IMG_SIZE, IMG_SIZE, 3), include_top=False, weights='imagenet')
+# Freeze the base model's layers
+for layer in base_model.layers:
+    layer.trainable = False
+# Add a new classification layer on top of the base model
+global_average_layer = tf.keras.layers.GlobalAveragePooling2D()(base_model.output)
+output_layer = tf.keras.layers.Dense(NUM_CLASSES, activation='softmax')(global_average_layer)
+# Create the fine-tuned model
+model = tf.keras.models.Model(inputs=base_model.input, outputs=output_layer)
+# Compile the model
+model.compile(optimizer=tf.keras.optimizers.Adam(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+# Train the model on the training set
+history = model.fit(train_ds, epochs=10, validation_data=val_ds)
+Epoch 1/10
+582/582 [==============================] - 46s 72ms/step - loss: 0.0595 - accuracy: 0.9797 - val_loss: 0.0392 - val_accuracy: 0.9850
+Epoch 2/10
+582/582 [==============================] - 41s 69ms/step - loss: 0.0296 - accuracy: 0.9895 - val_loss: 0.0362 - val_accuracy: 0.9875
+Epoch 3/10
+582/582 [==============================] - 41s 68ms/step - loss: 0.0255 - accuracy: 0.9915 - val_loss: 0.0369 - val_accuracy: 0.9880
+Epoch 4/10
+582/582 [==============================] - 41s 69ms/step - loss: 0.0207 - accuracy: 0.9929 - val_loss: 0.0393 - val_accuracy: 0.9884
+Epoch 5/10
+582/582 [==============================] - 41s 68ms/step - loss: 0.0184 - accuracy: 0.9938 - val_loss: 0.0388 - val_accuracy: 0.9884
+Epoch 6/10
+582/582 [==============================] - 41s 68ms/step - loss: 0.0177 - accuracy: 0.9937 - val_loss: 0.0390 - val_accuracy: 0.9871
+Epoch 7/10
+582/582 [==============================] - 41s 68ms/step - loss: 0.0155 - accuracy: 0.9951 - val_loss: 0.0423 - val_accuracy: 0.9862
+Epoch 8/10
+582/582 [==============================] - 40s 67ms/step - loss: 0.0147 - accuracy: 0.9955 - val_loss: 0.0424 - val_accuracy: 0.9880
+Epoch 9/10
+582/582 [==============================] - 41s 68ms/step - loss: 0.0139 - accuracy: 0.9954 - val_loss: 0.0440 - val_accuracy: 0.9871
+Epoch 10/10
+582/582 [==============================] - 42s 70ms/step - loss: 0.0120 - accuracy: 0.9961 - val_loss: 0.0446 - val_accuracy: 0.9875
+# Evaluate the model on the test set
+loss, accuracy = model.evaluate(test_ds)
+print(f'Test loss: {loss}, Test accuracy: {accuracy}')
+73/73 [==============================] - 5s 69ms/step - loss: 0.0271 - accuracy: 0.9901
+Test loss: 0.02713381126523018, Test accuracy: 0.990111768245697
